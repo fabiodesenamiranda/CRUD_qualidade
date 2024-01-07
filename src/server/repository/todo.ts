@@ -1,19 +1,20 @@
-import {read} from  "@db-crud-todo";
+import { read, create } from "@db-crud-todo";
 
 interface TodoRepositoryGetParams {
   page?: number;
-  limit?: number; 
+  limit?: number;
 }
-
 interface TodoRepositoryGetOutput {
   todos: Todo[];
   total: number;
   pages: number;
 }
-
-function get({page, limit}: TodoRepositoryGetParams = {}) {
+function get({
+  page,
+  limit,
+}: TodoRepositoryGetParams = {}): TodoRepositoryGetOutput {
   const currentPage = page || 1;
-  const currentLimit = limit || 10; 
+  const currentLimit = limit || 10;
   const ALL_TODOS = read();
 
   const startIndex = (currentPage - 1) * currentLimit;
@@ -28,12 +29,18 @@ function get({page, limit}: TodoRepositoryGetParams = {}) {
   };
 }
 
+async function createByContent(content: string): Promise<Todo> {
+  const newTodo = create(content);
+
+  return newTodo;
+}
+
 export const todoRepository = {
-  get, 
+  get,
+  createByContent,
 };
 
-//model schema
-
+// Model/Schema
 interface Todo {
   id: string;
   content: string;
